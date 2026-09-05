@@ -15,4 +15,8 @@
     }
 
     window.addEventListener("load", applyPCSpeed);
+
+    // applyUpgrades() can reset player.speed when a new game starts.
+    // Keep the PC keyboard speed responsive without changing mobile joystick speed.
+    setInterval(applyPCSpeed, 250);
 })();
