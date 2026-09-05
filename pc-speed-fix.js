@@ -1,9 +1,9 @@
-/* PC GAMEPLAY SPEED COMPENSATION
-   Desktop only. Mobile gameplay is intentionally untouched.
+/* PC GAMEPLAY + RENDER PERFORMANCE FIX
+   Desktop only. Mobile gameplay and mobile visuals are untouched.
 
-   The game's core movement is frame-based. If the browser renders at 30 FPS,
-   objects move roughly half as far per second. This adds only the missing
-   movement/timer portion instead of replacing or slowing requestAnimationFrame.
+   The game uses frame-based movement, so low desktop FPS makes everything
+   physically move too slowly. This file also removes expensive Canvas glow
+   blurs on desktop while keeping the neon shapes/colors themselves.
 */
 (function () {
     "use strict";
@@ -15,6 +15,23 @@
 
     if (mobile) return;
 
+    /* ---------------------------------------------------------
+       1. REMOVE EXPENSIVE CANVAS SHADOW BLUR ON PC
+       --------------------------------------------------------- */
+    try {
+        Object.defineProperty(ctx, "shadowBlur", {
+            configurable: true,
+            enumerable: true,
+            get: function () { return 0; },
+            set: function (_) { /* PC performance mode: no blur */ }
+        });
+    } catch (e) {
+        // If the browser refuses the property override, continue normally.
+    }
+
+    /* ---------------------------------------------------------
+       2. COMPENSATE FRAME-BASED GAMEPLAY WHEN FPS DROPS
+       --------------------------------------------------------- */
     const TARGET_FRAME_MS = 1000 / 60;
     const MAX_EXTRA = 2.5;
     let last = performance.now();
@@ -32,7 +49,7 @@
         if (elapsed > TARGET_FRAME_MS && typeof running !== "undefined" && running && !paused) {
             const extra = Math.min(MAX_EXTRA, elapsed / TARGET_FRAME_MS - 1);
 
-            // Player movement: add only the frames the main loop missed.
+            // Player movement.
             if (typeof keys !== "undefined" && typeof player !== "undefined") {
                 let dx = 0;
                 let dy = 0;
@@ -50,20 +67,22 @@
                 }
             }
 
-            // Bullets.
+            // Player/enemy bullets.
             if (typeof bullets !== "undefined") bullets.forEach(o => move(o, extra));
             if (typeof enemyBullets !== "undefined") enemyBullets.forEach(o => move(o, extra));
 
-            // Enemies, including the zig-zag vertical movement.
+            // Enemies.
             if (typeof enemies !== "undefined") enemies.forEach(o => {
                 o.y += o.speed * extra;
             });
 
-            // Asteroids and powerups.
+            // Asteroids.
             if (typeof asteroids !== "undefined") asteroids.forEach(o => {
                 o.y += o.speed * extra;
                 o.rotation += o.rotationSpeed * extra;
             });
+
+            // Powerups.
             if (typeof powerups !== "undefined") powerups.forEach(o => {
                 o.y += o.speed * extra;
             });
@@ -75,13 +94,13 @@
                 o.life -= 0.025 * extra;
             });
 
-            // Frame-based spawning/timers.
+            // Frame-based timers.
             if (typeof spawnTimer !== "undefined") spawnTimer -= 16 * extra;
             if (typeof asteroidTimer !== "undefined") asteroidTimer -= 16 * extra;
             if (typeof powerTimer !== "undefined") powerTimer -= 16 * extra;
             if (typeof comboTimer !== "undefined") comboTimer -= extra;
 
-            // Boss movement only; shooting uses its own frame timer in game.js.
+            // Boss movement.
             if (typeof boss !== "undefined" && boss) {
                 if (boss.y < 130) boss.y += 1.5 * extra;
                 else boss.x += boss.speed * boss.direction * extra;
