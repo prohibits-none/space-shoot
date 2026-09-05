@@ -19,7 +19,16 @@
 
     const maxDistance = 42;
     const deadZone = 12;
+
+    // Keep forward/up movement exactly as it was.
     const mobileSensitivity = 0.58;
+
+    // Very small boost for left/right movement.
+    const horizontalSensitivity = 0.64;
+
+    // Small boost for moving down.
+    const downSensitivity = 0.62;
+
     const maxMobileSpeed = 3.2;
 
     function setMove(x, y) {
@@ -100,8 +109,13 @@
             typeof paused !== "undefined" && !paused &&
             typeof player !== "undefined") {
 
-            player.x += joyX * maxMobileSpeed * mobileSensitivity * dt;
-            player.y += joyY * maxMobileSpeed * mobileSensitivity * dt;
+            const xSensitivity = horizontalSensitivity;
+            const ySensitivity = joyY > 0
+                ? downSensitivity
+                : mobileSensitivity;
+
+            player.x += joyX * maxMobileSpeed * xSensitivity * dt;
+            player.y += joyY * maxMobileSpeed * ySensitivity * dt;
 
             player.x = Math.max(30, Math.min(canvas.width - 30, player.x));
             player.y = Math.max(70, Math.min(canvas.height - 35, player.y));
