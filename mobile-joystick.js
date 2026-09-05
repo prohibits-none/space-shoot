@@ -1,7 +1,6 @@
 /* =========================================================
    MOBILE JOYSTICK + FIRE BUTTON
-   The old mobile controls stay in the DOM for compatibility,
-   while this layer provides the new touch controls.
+   Smooth, lower-sensitivity analog movement for mobile.
 ========================================================= */
 (function () {
     "use strict";
@@ -14,7 +13,14 @@
 
     let active = false;
     let pointerId = null;
+    let joyX = 0;
+    let joyY = 0;
+    let lastMoveTime = performance.now();
+
     const maxDistance = 42;
+    const deadZone = 12;
+    const mobileSensitivity = 0.58;
+    const maxMobileSpeed = 3.2;
 
     function setMove(x, y) {
         const rect = joystick.getBoundingClientRect();
@@ -31,16 +37,33 @@
 
         stick.style.transform = `translate(${dx}px, ${dy}px)`;
 
-        const dead = 10;
-        keys.arrowleft = dx < -dead;
-        keys.arrowright = dx > dead;
-        keys.arrowup = dy < -dead;
-        keys.arrowdown = dy > dead;
+        const usableDistance = Math.max(0, distance - deadZone);
+        const usableRange = maxDistance - deadZone;
+        const strength = Math.min(1, usableDistance / usableRange);
+        const easedStrength = Math.pow(strength, 1.35);
+
+        if (distance <= deadZone) {
+            joyX = 0;
+            joyY = 0;
+        } else {
+            const length = Math.hypot(dx, dy) || 1;
+            joyX = (dx / length) * easedStrength;
+            joyY = (dy / length) * easedStrength;
+        }
+
+        // Disable the old digital joystick movement while this analog
+        // controller is active, preventing double/over-sensitive movement.
+        keys.arrowleft = false;
+        keys.arrowright = false;
+        keys.arrowup = false;
+        keys.arrowdown = false;
     }
 
     function resetMove() {
         active = false;
         pointerId = null;
+        joyX = 0;
+        joyY = 0;
         stick.style.transform = "translate(0, 0)";
         keys.arrowleft = false;
         keys.arrowright = false;
@@ -68,6 +91,26 @@
 
     joystick.addEventListener("pointercancel", resetMove);
     joystick.addEventListener("lostpointercapture", resetMove);
+
+    function movePlayerSmoothly(now) {
+        const dt = Math.min(32, now - lastMoveTime) / 16.67;
+        lastMoveTime = now;
+
+        if (active && typeof running !== "undefined" && running &&
+            typeof paused !== "undefined" && !paused &&
+            typeof player !== "undefined") {
+
+            player.x += joyX * maxMobileSpeed * mobileSensitivity * dt;
+            player.y += joyY * maxMobileSpeed * mobileSensitivity * dt;
+
+            player.x = Math.max(30, Math.min(canvas.width - 30, player.x));
+            player.y = Math.max(70, Math.min(canvas.height - 35, player.y));
+        }
+
+        requestAnimationFrame(movePlayerSmoothly);
+    }
+
+    requestAnimationFrame(movePlayerSmoothly);
 
     function startFire(e) {
         e.preventDefault();
