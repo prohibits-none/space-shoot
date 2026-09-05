@@ -1,0 +1,51 @@
+/* Mobile navigation fix: keeps the right movement button visible on small phones. */
+@media (max-width: 700px) {
+    #mobileControls {
+        width: 100%;
+        left: 0;
+        right: 0;
+        padding-left: 8px;
+        padding-right: 8px;
+        overflow: visible;
+    }
+
+    .movePad {
+        width: auto;
+        flex: 0 0 auto;
+    }
+
+    .movePad > div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2px;
+    }
+
+    .movePad button {
+        flex: 0 0 auto;
+        margin: 0;
+    }
+}
+
+@media (max-width: 420px) {
+    .movePad {
+        width: auto;
+        min-width: 0;
+    }
+
+    .movePad > div {
+        gap: 2px;
+    }
+
+    .movePad button {
+        width: 33px;
+        height: 33px;
+        margin: 0;
+    }
+}
+
+/* Prevent mobile browsers from interpreting button touches as page gestures. */
+#mobileControls button {
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+}
