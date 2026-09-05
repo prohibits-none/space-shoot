@@ -20,8 +20,6 @@
     <div id="pauseScreen" class="screen hidden"><div class="panel"><h1>⏸️ PAUSED</h1><button id="resumeBtn">▶ RESUME</button><button id="quitBtn">🚪 QUIT</button></div></div>
     <div id="gameOver" class="screen hidden"><div class="panel"><h1>💀 GAME OVER</h1><p>Score: <strong id="finalScore">0</strong></p><p>Wave: <strong id="finalWave">1</strong></p><p>Best: <strong id="finalBest">0</strong></p><button id="restartBtn">🔄 PLAY AGAIN</button><button id="menuBtn">🏠 MAIN MENU</button></div></div>
     <div id="shopScreen" class="screen hidden"><div class="panel shop"><h1>🛒 UPGRADES</h1><div class="shopCoins">💰 Coins: <span id="shopCoins">0</span></div><button class="upgrade" data-type="health">❤️ Hull <span>100 💰</span></button><button class="upgrade" data-type="damage">🔥 Damage <span>150 💰</span></button><button class="upgrade" data-type="speed">⚡ Speed <span>100 💰</span></button><button class="upgrade" data-type="shield">🛡️ Shield <span>200 💰</span></button><button class="upgrade" data-type="fire">🔫 Fire Rate <span>250 💰</span></button><button id="closeShopBtn">CLOSE</button></div></div>
-
-    <!-- Mobile controls. Legacy controls remain hidden for game.js compatibility. -->
     <div id="mobileControls">
         <div class="movePad"><button id="mUp">▲</button><div><button id="mLeft">◀</button><button id="mDown">▼</button><button id="mRight">▶</button></div></div>
         <div class="mobileActions"><div class="guns"><button id="gun1">1</button><button id="gun2">2</button><button id="gun3">3</button></div><div class="actions"><button id="mShoot">🔥</button><button id="mShield">🛡️</button><button id="mDash">⚡</button></div></div>
@@ -32,5 +30,6 @@
 <script src="game.js"></script>
 <script src="mobile-joystick.js"></script>
 <script src="visual-upgrade.js"></script>
+<script src="pc-speed-fix.js"></script>
 </body>
 </html>
