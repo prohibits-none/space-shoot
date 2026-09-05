@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Galaxy Strike</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="gameWrapper">
+
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- TOP HUD -->
+    <div id="hud">
+
+        <div class="hud-left">
+
+            <div class="stat">
+                <span>❤️</span>
+                <div class="bar">
+                    <div id="healthBar"></div>
+                </div>
+            </div>
+
+            <div class="stat">
+                <span>🛡️</span>
+                <div class="bar shield">
+                    <div id="shieldBar"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="hud-center">
+
+            <div class="game-title">
+                GALAXY STRIKE
+            </div>
+
+            <div>
+                SCORE:
+                <span id="score">0</span>
+            </div>
+
+            <div>
+                WAVE:
+                <span id="wave">1</span>
+            </div>
+
+            <div>
+                COMBO:
+                <span id="combo">x1</span>
+            </div>
+
+        </div>
+
+        <div class="hud-right">
+
+            <div>💰 <span id="coins">0</span></div>
+
+            <div>
+                WEAPON:
+                <span id="weaponName">LASER</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- BOSS HUD -->
+
+    <div id="bossContainer">
+
+        <div id="bossName">
+            BOSS
+        </div>
+
+        <div class="boss-bar">
+            <div id="bossHealth"></div>
+        </div>
+
+    </div>
+
+
+    <!-- START SCREEN -->
+
+    <div id="startScreen" class="screen">
+
+        <div class="panel">
+
+            <h1>🚀 GALAXY STRIKE</h1>
+
+            <p>
+                Defend the galaxy from endless waves of enemies.
+            </p>
+
+            <button id="startButton">
+                START MISSION
+            </button>
+
+            <button id="shopButton">
+                🛒 UPGRADES
+            </button>
+
+            <div class="controls">
+
+                <h3>CONTROLS</h3>
+
+                <p>WASD / Arrow Keys — Move</p>
+                <p>SPACE — Shoot</p>
+                <p>SHIFT — Dash</p>
+                <p>E — Shield</p>
+                <p>P — Pause</p>
+                <p>1 / 2 / 3 — Change Weapon</p>
+
+            </div>
+
+            <p class="highscore">
+                🏆 HIGH SCORE:
+                <span id="highScore">0</span>
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- PAUSE -->
+
+    <div id="pauseScreen" class="screen hidden">
+
+        <div class="panel">
+
+            <h1>⏸️ PAUSED</h1>
+
+            <button id="resumeButton">
+                RESUME
+            </button>
+
+            <button id="quitButton">
+                QUIT
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- GAME OVER -->
+
+    <div id="gameOverScreen" class="screen hidden">
+
+        <div class="panel">
+
+            <h1>💀 GAME OVER</h1>
+
+            <p>
+                SCORE:
+                <strong id="finalScore">0</strong>
+            </p>
+
+            <p>
+                WAVE:
+                <strong id="finalWave">1</strong>
+            </p>
+
+            <p>
+                BEST:
+                <strong id="finalHighScore">0</strong>
+            </p>
+
+            <button id="restartButton">
+                🔄 PLAY AGAIN
+            </button>
+
+            <button id="menuButton">
+                MAIN MENU
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- SHOP -->
+
+    <div id="shopScreen" class="screen hidden">
+
+        <div class="panel shop">
+
+            <h1>🛒 SPACE SHOP</h1>
+
+            <p>
+                Coins:
+                <strong id="shopCoins">0</strong>
+            </p>
+
+            <button class="upgrade" data-upgrade="health">
+                ❤️ Upgrade Hull
+                <span>100 coins</span>
+            </button>
+
+            <button class="upgrade" data-upgrade="damage">
+                🔥 Weapon Damage
+                <span>150 coins</span>
+            </button>
+
+            <button class="upgrade" data-upgrade="speed">
+                ⚡ Ship Speed
+                <span>100 coins</span>
+            </button>
+
+            <button class="upgrade" data-upgrade="shield">
+                🛡️ Shield Capacity
+                <span>200 coins</span>
+            </button>
+
+            <button class="upgrade" data-upgrade="fireRate">
+                🔫 Fire Rate
+                <span>250 coins</span>
+            </button>
+
+            <button id="closeShop">
+                CLOSE
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- MOBILE CONTROLS -->
+
+    <div id="mobileControls">
+
+        <div class="mobile-left">
+
+            <button id="up">▲</button>
+
+            <div>
+                <button id="left">◀</button>
+                <button id="down">▼</button>
+                <button id="right">▶</button>
+            </div>
+
+        </div>
+
+        <div class="mobile-right">
+
+            <button id="mobileShoot">
+                🔥
+            </button>
+
+            <button id="mobileShield">
+                🛡️
+            </button>
+
+            <button id="mobileDash">
+                ⚡
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="game.js"></script>
+
+</body>
+</html>

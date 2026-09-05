@@ -1,0 +1,511 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #10183b 0%,
+            #050817 45%,
+            #010207 100%
+        );
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: white;
+}
+
+
+#gameWrapper {
+    position: relative;
+
+    width: 100vw;
+    height: 100vh;
+
+    overflow: hidden;
+}
+
+
+canvas {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
+}
+
+
+/* =========================
+        HUD
+========================= */
+
+#hud {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+
+    padding: 15px 25px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    pointer-events: none;
+
+    text-shadow:
+        0 0 5px #00eaff,
+        0 0 15px #00eaff;
+
+    font-weight: bold;
+
+    z-index: 10;
+}
+
+
+.hud-left,
+.hud-right {
+    min-width: 220px;
+}
+
+
+.hud-right {
+    text-align: right;
+
+    line-height: 28px;
+}
+
+
+.hud-center {
+    text-align: center;
+
+    line-height: 25px;
+}
+
+
+.game-title {
+    font-size: 22px;
+
+    letter-spacing: 4px;
+
+    color: #00eaff;
+}
+
+
+.stat {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 8px;
+}
+
+
+.bar {
+    width: 180px;
+    height: 13px;
+
+    border: 2px solid white;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    background: #160b14;
+}
+
+
+#healthBar {
+    width: 100%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff2222,
+            #ff7b00
+        );
+
+    transition: width 0.15s;
+}
+
+
+.shield {
+    background: #071526;
+}
+
+
+#shieldBar {
+    width: 100%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #0077ff,
+            #00eaff
+        );
+
+    transition: width 0.15s;
+}
+
+
+/* =========================
+       BOSS BAR
+========================= */
+
+#bossContainer {
+    position: absolute;
+
+    left: 50%;
+
+    top: 80px;
+
+    transform: translateX(-50%);
+
+    width: min(650px, 70vw);
+
+    display: none;
+
+    text-align: center;
+
+    z-index: 20;
+}
+
+
+#bossName {
+    color: #ff3355;
+
+    font-size: 22px;
+
+    font-weight: bold;
+
+    margin-bottom: 7px;
+
+    text-shadow:
+        0 0 10px red;
+}
+
+
+.boss-bar {
+    height: 20px;
+
+    border: 2px solid white;
+
+    border-radius: 20px;
+
+    background: #250512;
+
+    overflow: hidden;
+}
+
+
+#bossHealth {
+    height: 100%;
+
+    width: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff003c,
+            #ff8a00
+        );
+}
+
+
+/* =========================
+        SCREENS
+========================= */
+
+.screen {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        rgba(0, 0, 20, 0.7);
+
+    backdrop-filter:
+        blur(5px);
+
+    z-index: 100;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+
+.panel {
+    width: min(600px, 90vw);
+
+    padding: 40px;
+
+    border-radius: 25px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(14, 23, 60, 0.95),
+            rgba(3, 7, 25, 0.97)
+        );
+
+    border:
+        2px solid rgba(0, 234, 255, 0.5);
+
+    box-shadow:
+        0 0 30px rgba(0, 234, 255, 0.25),
+        inset 0 0 30px rgba(0, 234, 255, 0.05);
+}
+
+
+.panel h1 {
+    font-size: 42px;
+
+    color: #00eaff;
+
+    margin-bottom: 20px;
+
+    text-shadow:
+        0 0 15px #00eaff;
+}
+
+
+.panel p {
+    margin: 10px 0;
+
+    color: #c9eaff;
+}
+
+
+button {
+    width: 80%;
+
+    padding: 15px 20px;
+
+    margin: 10px auto;
+
+    display: block;
+
+    border: 2px solid #00eaff;
+
+    border-radius: 12px;
+
+    background:
+        rgba(0, 234, 255, 0.08);
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        0.2s transform,
+        0.2s background,
+        0.2s box-shadow;
+}
+
+
+button:hover {
+    transform: scale(1.04);
+
+    background:
+        rgba(0, 234, 255, 0.25);
+
+    box-shadow:
+        0 0 20px rgba(0, 234, 255, 0.5);
+}
+
+
+button:active {
+    transform: scale(0.97);
+}
+
+
+.controls {
+    margin-top: 25px;
+
+    padding: 15px;
+
+    border-radius: 15px;
+
+    background:
+        rgba(255,255,255,0.04);
+}
+
+
+.controls h3 {
+    color: #ffdb4d;
+
+    margin-bottom: 10px;
+}
+
+
+.highscore {
+    margin-top: 20px !important;
+
+    color: #ffdb4d !important;
+}
+
+
+/* =========================
+        SHOP
+========================= */
+
+.shop {
+    max-width: 650px;
+}
+
+
+.upgrade {
+    width: 100%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+
+.upgrade span {
+    color: #ffd23c;
+}
+
+
+/* =========================
+       MOBILE
+========================= */
+
+#mobileControls {
+    position: absolute;
+
+    bottom: 20px;
+
+    left: 0;
+
+    width: 100%;
+
+    display: none;
+
+    justify-content: space-between;
+
+    padding: 15px;
+
+    z-index: 50;
+
+    pointer-events: none;
+}
+
+
+.mobile-left,
+.mobile-right {
+    pointer-events: auto;
+}
+
+
+.mobile-left button {
+    display: inline-block;
+
+    width: 55px;
+    height: 55px;
+
+    margin: 3px;
+
+    padding: 0;
+
+    opacity: 0.65;
+}
+
+
+.mobile-right {
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.mobile-right button {
+    width: 65px;
+    height: 65px;
+
+    padding: 0;
+
+    border-radius: 50%;
+
+    opacity: 0.7;
+}
+
+
+@media (max-width: 700px) {
+
+    #mobileControls {
+        display: flex;
+    }
+
+    #hud {
+        padding: 8px;
+
+        font-size: 12px;
+    }
+
+    .hud-left,
+    .hud-right {
+        min-width: 100px;
+    }
+
+    .bar {
+        width: 90px;
+        height: 9px;
+    }
+
+    .game-title {
+        font-size: 14px;
+        letter-spacing: 2px;
+    }
+
+    .panel {
+        padding: 25px;
+    }
+
+    .panel h1 {
+        font-size: 30px;
+    }
+
+}
