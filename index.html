@@ -6,6 +6,7 @@
     <title>Galaxy Strike 🚀</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="mobile-fix.css">
+    <link rel="stylesheet" href="leaderboard.css">
 </head>
 <body>
 <div id="game">
@@ -16,9 +17,19 @@
         <div class="hudSide right"><div>💰 <span id="coins">0</span></div><div>🔫 <span id="weapon">LASER</span></div></div>
     </div>
     <div id="bossUI"><div id="bossText">👑 GALACTIC DESTROYER</div><div class="bossOuter"><div id="bossBar"></div></div></div>
-    <div id="startScreen" class="screen"><div class="panel"><h1>🚀 GALAXY STRIKE</h1><p class="subtitle">Defend the galaxy.</p><button id="startBtn">🚀 START GAME</button><button id="openShopBtn">🛒 UPGRADES</button><div class="instructions"><h3>🎮 CONTROLS</h3><p>WASD / Arrow Keys — Move</p><p>SPACE — Shoot</p><p>SHIFT — Dash</p><p>E — Shield</p><p>1 / 2 / 3 — Weapons</p><p>P — Pause</p></div><div class="best">🏆 Best Score: <span id="highScore">0</span></div></div></div>
+    <div id="startScreen" class="screen"><div class="panel"><h1>🚀 GALAXY STRIKE</h1><p class="subtitle">Defend the galaxy.</p>
+        <div class="playerProfile">
+            <label for="playerName">PLAYER NAME</label>
+            <input id="playerName" maxlength="18" autocomplete="nickname" placeholder="Pilot">
+            <div class="playerId">PLAYER ID: <span id="playerId">Loading…</span></div>
+            <button id="savePlayerBtn">💾 SAVE PLAYER</button>
+            <div id="leaderboardStatus">Connecting to global leaderboard…</div>
+        </div>
+        <button id="startBtn">🚀 START GAME</button><button id="leaderboardBtn">🏆 WORLD LEADERBOARD</button><button id="openShopBtn">🛒 UPGRADES</button>
+        <div class="instructions"><h3>🎮 CONTROLS</h3><p>WASD / Arrow Keys — Move</p><p>SPACE — Shoot</p><p>SHIFT — Dash</p><p>E — Shield</p><p>1 / 2 / 3 — Weapons</p><p>P — Pause</p></div><div class="best">🏆 Best Score: <span id="highScore">0</span></div></div></div>
     <div id="pauseScreen" class="screen hidden"><div class="panel"><h1>⏸️ PAUSED</h1><button id="resumeBtn">▶ RESUME</button><button id="quitBtn">🚪 QUIT</button></div></div>
-    <div id="gameOver" class="screen hidden"><div class="panel"><h1>💀 GAME OVER</h1><p>Score: <strong id="finalScore">0</strong></p><p>Wave: <strong id="finalWave">1</strong></p><p>Best: <strong id="finalBest">0</strong></p><button id="restartBtn">🔄 PLAY AGAIN</button><button id="menuBtn">🏠 MAIN MENU</button></div></div>
+    <div id="gameOver" class="screen hidden"><div class="panel"><h1>💀 GAME OVER</h1><p>Score: <strong id="finalScore">0</strong></p><p>Wave: <strong id="finalWave">1</strong></p><p>Best: <strong id="finalBest">0</strong></p><button id="restartBtn">🔄 PLAY AGAIN</button><button id="menuBtn">🏠 MAIN MENU</button><button id="leaderboardBtnGameOver">🏆 VIEW WORLD RANK</button></div></div>
+    <div id="leaderboardScreen" class="screen hidden"><div class="panel leaderboard"><h1>🏆 WORLD LEADERBOARD</h1><p>Top 10 pilots • Your best score is kept</p><div id="leaderboardList"><div class="leaderboardLoading">Loading global scores…</div></div><button id="closeLeaderboardBtn">CLOSE</button></div></div>
     <div id="shopScreen" class="screen hidden"><div class="panel shop"><h1>🛒 UPGRADES</h1><div class="shopCoins">💰 Coins: <span id="shopCoins">0</span></div><button class="upgrade" data-type="health">❤️ Hull <span>100 💰</span></button><button class="upgrade" data-type="damage">🔥 Damage <span>150 💰</span></button><button class="upgrade" data-type="speed">⚡ Speed <span>100 💰</span></button><button class="upgrade" data-type="shield">🛡️ Shield <span>200 💰</span></button><button class="upgrade" data-type="fire">🔫 Fire Rate <span>250 💰</span></button><button id="closeShopBtn">CLOSE</button></div></div>
     <div id="mobileControls">
         <div class="movePad"><button id="mUp">▲</button><div><button id="mLeft">◀</button><button id="mDown">▼</button><button id="mRight">▶</button></div></div>
@@ -27,10 +38,13 @@
         <button id="mobileFire" aria-label="Fire">🔥</button>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="leaderboard-config.js"></script>
 <script src="game.js"></script>
 <script src="mobile-joystick.js"></script>
 <script src="visual-upgrade.js"></script>
 <script src="pc-speed-fix.js"></script>
 <script src="pc-extra-speed.js"></script>
+<script src="leaderboard.js"></script>
 </body>
 </html>
