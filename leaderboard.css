@@ -1,0 +1,70 @@
+/* Space Shoot player + leaderboard UI */
+
+.playerProfile {
+    margin: 14px 0;
+    padding: 12px;
+    border: 1px solid rgba(120, 220, 255, .35);
+    border-radius: 12px;
+    background: rgba(0, 20, 45, .55);
+}
+
+.playerProfile label {
+    display: block;
+    font-size: 11px;
+    opacity: .75;
+    margin-bottom: 5px;
+}
+
+#playerName {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(120, 220, 255, .4);
+    background: rgba(0, 0, 0, .35);
+    color: inherit;
+    outline: none;
+}
+
+.playerId {
+    margin-top: 7px;
+    font-size: 10px;
+    opacity: .65;
+    word-break: break-all;
+}
+
+#savePlayerBtn, #leaderboardBtn {
+    width: 100%;
+    margin-top: 8px;
+}
+
+#leaderboardStatus {
+    min-height: 16px;
+    margin-top: 8px;
+    font-size: 11px;
+    opacity: .8;
+}
+
+#leaderboardStatus[data-error="true"] { opacity: .95; }
+
+.leaderboard {
+    width: min(92vw, 520px);
+    max-height: 82vh;
+    overflow: auto;
+}
+
+.leaderboardRow {
+    display: grid;
+    grid-template-columns: 52px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 11px 10px;
+    margin: 5px 0;
+    border-radius: 10px;
+    background: rgba(255,255,255,.055);
+}
+
+.leaderboardRow.mine { outline: 1px solid rgba(120, 220, 255, .7); }
+.leaderboardRow .rank { text-align: center; }
+.leaderboardRow .pilot { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.leaderboardLoading { text-align: center; padding: 22px 8px; opacity: .7; }
