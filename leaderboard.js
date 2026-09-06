@@ -5,19 +5,16 @@
 
 (() => {
     const cfg = window.SPACE_SHOOT_CONFIG || {};
-    const configured =
-        cfg.supabaseUrl &&
-        cfg.supabaseAnonKey &&
-        !cfg.supabaseUrl.includes("YOUR_") &&
-        !cfg.supabaseAnonKey.includes("YOUR_");
+    const configured = cfg.supabaseUrl && cfg.supabaseAnonKey &&
+        !cfg.supabaseUrl.includes("YOUR_") && !cfg.supabaseAnonKey.includes("YOUR_");
 
     const playerIdEl = document.getElementById("playerId");
     const playerNameEl = document.getElementById("playerName");
     const leaderboardList = document.getElementById("leaderboardList");
     const leaderboardStatus = document.getElementById("leaderboardStatus");
     const leaderboardScreen = document.getElementById("leaderboardScreen");
-
     const localKey = "GalaxyStrikePlayer";
+
     let player = JSON.parse(localStorage.getItem(localKey) || "null");
     let supabase = null;
     let lastSubmittedScore = -1;
@@ -44,8 +41,7 @@
     function saveName() {
         const clean = (playerNameEl?.value || "Pilot")
             .replace(/[^a-zA-Z0-9 _-]/g, "")
-            .trim()
-            .slice(0, 18) || "Pilot";
+            .trim().slice(0, 18) || "Pilot";
         player.name = clean;
         localStorage.setItem(localKey, JSON.stringify(player));
         if (playerNameEl) playerNameEl.value = clean;
@@ -57,7 +53,6 @@
             status("Leaderboard setup needed — your Player ID is saved locally.");
             return;
         }
-
         try {
             supabase = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
             const { data, error } = await supabase.auth.getSession();
@@ -67,12 +62,10 @@
                 const result = await supabase.auth.signInAnonymously();
                 if (result.error) throw result.error;
                 player.id = result.data.user.id;
-                localStorage.setItem(localKey, JSON.stringify(player));
             } else {
                 player.id = data.session.user.id;
-                localStorage.setItem(localKey, JSON.stringify(player));
             }
-
+            localStorage.setItem(localKey, JSON.stringify(player));
             showPlayer();
             status("Online • global scores enabled");
             loadLeaderboard();
@@ -84,7 +77,6 @@
 
     async function loadLeaderboard() {
         if (!supabase || !leaderboardList) return;
-
         leaderboardList.innerHTML = "<div class='leaderboardLoading'>Loading global scores…</div>";
 
         const { data, error } = await supabase
@@ -98,7 +90,6 @@
             leaderboardList.innerHTML = "<div class='leaderboardLoading'>Could not load scores.</div>";
             return;
         }
-
         if (!data.length) {
             leaderboardList.innerHTML = "<div class='leaderboardLoading'>No scores yet. Be the first! 🚀</div>";
             return;
@@ -107,11 +98,7 @@
         leaderboardList.innerHTML = data.map((row, index) => {
             const medal = ["🥇", "🥈", "🥉"][index] || `#${index + 1}`;
             const mine = row.player_id === player.id ? " mine" : "";
-            return `<div class="leaderboardRow${mine}">
-                <span class="rank">${medal}</span>
-                <span class="pilot">${escapeHtml(row.player_name)}</span>
-                <strong>${Number(row.best_score).toLocaleString()}</strong>
-            </div>`;
+            return `<div class="leaderboardRow${mine}"><span class="rank">${medal}</span><span class="pilot">${escapeHtml(row.player_name)}</span><strong>${Number(row.best_score).toLocaleString()}</strong></div>`;
         }).join("");
     }
 
@@ -119,19 +106,14 @@
         score = Math.floor(Number(score) || 0);
         if (!supabase || score <= 0 || score === lastSubmittedScore) return;
         lastSubmittedScore = score;
-
-        const name = saveName();
         const { error } = await supabase.rpc("submit_space_shoot_score", {
-            p_player_name: name,
-            p_score: score
+            p_player_name: saveName(), p_score: score
         });
-
         if (error) {
             console.error("Score submission error:", error);
             status("Score could not be submitted.", true);
             return;
         }
-
         status("Score submitted to the global leaderboard! 🏆");
         loadLeaderboard();
     }
@@ -142,12 +124,7 @@
         }[char]));
     }
 
-    window.SpaceShootLeaderboard = {
-        submitScore,
-        loadLeaderboard,
-        getPlayer: () => ({ ...player }),
-        saveName
-    };
+    window.SpaceShootLeaderboard = { submitScore, loadLeaderboard, getPlayer: () => ({ ...player }), saveName };
 
     document.getElementById("savePlayerBtn")?.addEventListener("click", () => {
         saveName();
@@ -159,19 +136,25 @@
         loadLeaderboard();
     });
 
+    document.getElementById("leaderboardBtnGameOver")?.addEventListener("click", () => {
+        leaderboardScreen?.classList.remove("hidden");
+        loadLeaderboard();
+    });
+
     document.getElementById("closeLeaderboardBtn")?.addEventListener("click", () => {
         leaderboardScreen?.classList.add("hidden");
     });
 
-    // Detect the existing game's Game Over screen without changing its game loop.
-    const observer = new MutationObserver(() => {
-        if (!document.getElementById("gameOver")?.classList.contains("hidden")) {
-            const score = Number(document.getElementById("finalScore")?.textContent || 0);
-            if (score > 0) submitScore(score);
-        }
-    });
-
-    observer.observe(document.getElementById("gameOver"), { attributes: true, attributeFilter: ["class"] });
+    const gameOver = document.getElementById("gameOver");
+    if (gameOver) {
+        const observer = new MutationObserver(() => {
+            if (!gameOver.classList.contains("hidden")) {
+                const score = Number(document.getElementById("finalScore")?.textContent || 0);
+                if (score > 0) submitScore(score);
+            }
+        });
+        observer.observe(gameOver, { attributes: true, attributeFilter: ["class"] });
+    }
 
     showPlayer();
     initCloud();
